@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="/media/iulian/Work/Facultate/Anul_4/EIM/Colocviu/PracticalTest02/PracticalTest02" />
+            <option value="/media/iulian/Work/Facultate/Anul_4/EIM/Colocviu/PracticalTest02/PracticalTest02/app" />
+            <option value="/media/iulian/Work/Facultate/Anul_4/EIM/Colocviu/PracticalTest02/PracticalTest02/httpclient-4.4.1.2" />
+            <option value="/media/iulian/Work/Facultate/Anul_4/EIM/Colocviu/PracticalTest02/PracticalTest02/jsoup-1.10.2" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
