@@ -3,6 +3,7 @@ package ro.pub.cs.systems.eim.practicaltest02.network;
 import android.util.Log;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class ServerThread extends Thread {
     private ServerSocket serverSocket = null;
 
     private HashMap<String, StockInformation> data = null;
+    private HashMap<InetAddress, Long> map;
 
     public ServerThread(int port) {
         this.port = port;
@@ -30,6 +32,7 @@ public class ServerThread extends Thread {
         }
 
         this.data = new HashMap<>();
+        this.map = new HashMap<>();
     }
 
     public void setPort(int port) {
@@ -61,10 +64,22 @@ public class ServerThread extends Thread {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 Log.i(Constants.TAG, "[SERVER THREAD] Waiting for a client invocation...");
+
                 Socket socket = serverSocket.accept();
                 Log.i(Constants.TAG, "[SERVER THREAD] A connection request was received from " + socket.getInetAddress() + ":" + socket.getLocalPort());
-                CommunicationThread communicationThread = new CommunicationThread(this, socket);
-                communicationThread.start();
+
+                if(!map.containsKey(socket.getInetAddress())) {
+                    map.put(socket.getInetAddress(), System.currentTimeMillis());
+                }
+
+                Long tm = map.get(socket.getInetAddress());
+                long diff = System.currentTimeMillis() - tm.longValue();
+                if(diff != 0 && diff < 60 * 1000) {
+                    Log.d(Constants.TAG, "[SERVER THREAD ERROR] Too many requests from this client!");
+                } else {
+                    CommunicationThread communicationThread = new CommunicationThread(this, socket);
+                    communicationThread.start();
+                }
             }
         } catch (ClientProtocolException clientProtocolException) {
             Log.e(Constants.TAG, "[SERVER THREAD] An exception has occurred: " + clientProtocolException.getMessage());

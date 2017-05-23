@@ -41,6 +41,7 @@ public class ClientThread extends Thread {
                 Log.e(Constants.TAG, "[CLIENT THREAD] Buffered Reader / Print Writer are null!");
                 return;
             }
+            Log.d(Constants.TAG, "[Client] Sent to server: " + stock);
             printWriter.println(stock);
             printWriter.flush();
 

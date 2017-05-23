@@ -66,36 +66,26 @@ public class CommunicationThread extends Thread {
 
             HashMap<String, StockInformation> data = serverThread.getData();
             StockInformation stockInformation = null;
-            boolean request = false;
-//
-//            if (data.containsKey(stock)) {
-//                Log.i(Constants.TAG, "[COMMUNICATION THREAD] Getting the information from the cache...");
-//            stockInformation = data.get(stock);
-//
-//                SimpleDateFormat sdf = new SimpleDateFormat();
-//                Date d = sdf.parse(stockInformation.getTime(), new ParsePosition(0));
-//
-//                if(System.currentTimeMillis() - d.getTime() > 1000) {
-//                    Log.i(Constants.TAG, "[COMMUNICATION THREAD] Data from cache is old...");
-//                    request = true;
-//                }
-//                else {
-//                    printWriter.println(stockInformation.toString());
-//                    Log.i("cache", stockInformation.toString());
-//                    printWriter.flush();
-//                }
-//            }
+            boolean request = true;
 
             if (data.containsKey(stock)) {
-                Log.i(Constants.TAG, "[COMMUNICATION THREAD] Getting the information from the cache...");
+                Log.d(Constants.TAG, "[COMMUNICATION THREAD] Getting the information from the cache...");
                 stockInformation = data.get(stock);
 
+                long diff = System.currentTimeMillis() - stockInformation.getTimestamp();
+                Log.d(Constants.TAG, "[COMMUNICATION THREAD] time diff: " + diff);
+                if(diff > 60 * 1000) {
+                    Log.d(Constants.TAG, "[COMMUNICATION THREAD] Data from cache is old...");
+                }
+                else {
+                    printWriter.println(stockInformation.toString());
+                    Log.i("cache", stockInformation.toString());
+                    printWriter.flush();
+                    request = false;
+                }
+            }
 
-                printWriter.println(stockInformation.toString());
-                Log.i("cache", stockInformation.toString());
-                printWriter.flush();
-
-            }else {
+            if (request) {
                 Log.i(Constants.TAG, "[COMMUNICATION THREAD] Getting the information from the webservice...");
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpGet httpGet  = new HttpGet(Constants.WEB_SERVICE_ADDRESS + stock + "&f=l1t1");
